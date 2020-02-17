@@ -7,6 +7,8 @@
 #include "google/api/http.pb.h"
 #include "as/external/api/internal.grpc.pb.h"
 #include "as/external/api/internal.pb.h"
+#include "as/external/api/device.grpc.pb.h"
+#include "as/external/api/device.pb.h"
 
 //using namespace std;
 
@@ -26,6 +28,9 @@ using api::InternalService;
 using api::LoginRequest;
 using api::LoginResponse;
 
+using api::DeviceService;
+using api::StreamDeviceEventLogsRequest;
+using api::StreamDeviceEventLogsResponse;
 
 
 class AppServiceClient {
@@ -33,18 +38,11 @@ class AppServiceClient {
     AppServiceClient(std::shared_ptr<Channel> channel)
       : stub_(ApplicationService::NewStub(channel)) {}
 
-    CreateApplicationResponse Create(CreateApplicationRequest req) {
-      //CreateApplicationResponse response = req.application.id;
-      CreateApplicationResponse response;
-      response.set_id (5);
-      return response;
-    }
-
     // This just serves as an example of how we get info from the Application Server.
     std::string getAppDescription (std::string jwt, int appID) {
       // Data we are sending to the server.
       GetApplicationRequest request;
-      request.set_id(4);
+      request.set_id(appID);
 
       // Container for the data we expect from the server.
       GetApplicationResponse response;
@@ -79,8 +77,13 @@ class InternalServiceClient {
       LoginRequest request;
 
       // Uncomment the following two...
-      //request.set_username("username");
-      //request.set_password("password");
+      std::string username, password;
+      std::cout << "enter username: ";
+      std::cin >> username ;
+      request.set_username(username);
+      std::cout << "enter password: ";
+      std::cin >> password;
+      request.set_password(password);
 
       // Context for the client. It could be used to convey extra information to
       // the server and/or tweak certain RPC behaviors.
@@ -103,6 +106,15 @@ class InternalServiceClient {
     // Container for the data we expect from the server.
     LoginResponse response;
 };
+
+//class DeviceServiceClient {
+//  public:
+//    DeviceServiceClient(std::shared_ptr<Channel> channel)
+//      : stub_(DeviceService::NewStub(channel)) {}
+//
+//  private:
+//    std::unique_ptr<DeviceService::Stub> stub_;
+//};
 
 
 int main(){

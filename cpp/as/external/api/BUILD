@@ -316,3 +316,8 @@ cpp_grpc_library(
     name = "internal_cpp_grpc_library",
     deps = [":internal_proto"],
 )
+
+cpp_grpc_library(
+    name = "device_cpp_grpc_library",
+    deps = [":device_proto"],
+)
