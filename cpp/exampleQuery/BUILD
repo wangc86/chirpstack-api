@@ -1,5 +1,5 @@
 cc_binary(
-  name = "mainApp",
+  name = "query",
   srcs = ["main.cpp"],
 #  copts = [
 #          "-Ibazel-bin/protobuf/as/external/api/application_cpp_grpc_library_pb",

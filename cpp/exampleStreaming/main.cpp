@@ -10,7 +10,6 @@
 #include "as/external/api/device.grpc.pb.h"
 #include "as/external/api/device.pb.h"
 
-//using namespace std;
 
 using grpc::Channel;
 using grpc::ClientContext;
@@ -40,7 +39,6 @@ class AppServiceClient {
 
     // This just serves as an example of how we get info from the Application Server.
     std::string getAppDescription (std::string jwt, int appID) {
-      // Data we are sending to the server.
       GetApplicationRequest request;
       request.set_id(appID);
 
@@ -77,8 +75,8 @@ class InternalServiceClient {
       LoginRequest request;
 
       std::string username, password;
-      username = "";
-      password = "";
+      username = ""; // TODO: specify the username
+      password = ""; // TODO: specify the password
       //std::cout << "enter username: ";
       //std::cin >> username ;
       request.set_username(username);
@@ -115,9 +113,13 @@ class DeviceServiceClient {
 
     void streamingEventLogs (std::string jwt) {
       StreamDeviceEventLogsRequest request;
-      request.set_dev_eui("");
+      request.set_dev_eui(""); // TODO: specify the device EUI
       ClientContext context;
       context.AddMetadata("authorization", jwt);
+
+      // Use the StreamEventLogs rpc (intended for for debugging only)
+      // defined in service DeviceService in device.proto
+      // to stream the events of the device with the given device EUI
       std::unique_ptr<ClientReader<StreamDeviceEventLogsResponse>
                      > reader(stub_->StreamEventLogs(&context, request));
 
@@ -131,7 +133,7 @@ class DeviceServiceClient {
       }
 
       /* The followings is not applicable,
-       * because the server ceases not.
+       * because the server ceases not in our case.
       Status status = reader->Finish();
       if (status.ok()) {
         std::cout << "Done" << std::endl;
@@ -153,8 +155,6 @@ int main(){
     "0.0.0.0:8080", grpc::InsecureChannelCredentials()));
   std::string jwt;
   jwt = insider.GetJWT();
-//  std::cout << jwt << std::endl;
-//  metadata.set("authorization", insider.GetJWT());
 
   AppServiceClient agentAdam(grpc::CreateChannel(
     "0.0.0.0:8080", grpc::InsecureChannelCredentials()));
